@@ -39,7 +39,7 @@ public class User implements UserDetails {
     private List<Material> materials;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Test> tests;
+    private List<Quiz> quizzes;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

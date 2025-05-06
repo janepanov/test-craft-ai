@@ -22,8 +22,8 @@ public class Question {
     private String questionText;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "test_id")
-    private Test test;
+    @JoinColumn(name = "quiz_id")
+    private Quiz quiz;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)

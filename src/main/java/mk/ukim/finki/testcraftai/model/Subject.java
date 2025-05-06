@@ -28,5 +28,5 @@ public class Subject {
     private List<Material> materials;
 
     @OneToMany(mappedBy = "subject", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Test> tests;
+    private List<Quiz> quizzes;
 }
