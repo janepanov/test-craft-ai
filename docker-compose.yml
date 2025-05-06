@@ -1,0 +1,82 @@
+services:
+  # Application service
+  testcraftai:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: testcraftai-app
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/testcraftai
+      - SPRING_DATASOURCE_USERNAME=testcraft_user
+      - SPRING_DATASOURCE_PASSWORD=testcraft_password
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - SPRING_PROFILES_ACTIVE=prod
+      - SERVER_PORT=8080
+    ports:
+      - "8080:8080"
+    networks:
+      - testcraftai-network
+    volumes:
+      - ./uploads:/app/uploads
+      - ./logs:/app/logs
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  # Database service
+  postgres:
+    image: postgres:15-alpine
+    container_name: testcraftai-db
+    environment:
+      - POSTGRES_DB=testcraftai
+      - POSTGRES_USER=testcraft_user
+      - POSTGRES_PASSWORD=testcraft_password
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - testcraftai-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U testcraft_user -d testcraftai"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # PgAdmin for database management
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: testcraftai-pgadmin
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@testcraftai.com
+      - PGADMIN_DEFAULT_PASSWORD=admin_password
+    ports:
+      - "5050:80"
+    networks:
+      - testcraftai-network
+    depends_on:
+      - postgres
+    restart: unless-stopped
+    profiles:
+      - dev
+
+networks:
+  testcraftai-network:
+    driver: bridge
+    name: testcraftai-network
+
+volumes:
+  postgres-data:
+    name: testcraftai-postgres-data
