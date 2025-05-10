@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Dashboard - TestCraft AI</title>
+</head>
+<body>
+<div th:replace="~{fragments/dashboard-layout :: html}">
+    <!-- This content will be replaced by the dashboard layout -->
+</div>
+
+<!-- Sidebar Content -->
+<div id="sidebarContent">
+    <h5 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+        <span>Teacher Menu</span>
+    </h5>
+    <ul class="nav flex-column">
+        <li class="nav-item">
+            <a class="nav-link active" href="/teacher/dashboard">
+                <i class="bi bi-speedometer2"></i> Dashboard
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/teacher/materials">
+                <i class="bi bi-file-earmark-text"></i> My Materials
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/teacher/quizzes">
+                <i class="bi bi-question-circle"></i> My Quizzes
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/teacher/create-quiz">
+                <i class="bi bi-plus-circle"></i> Create Quiz
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/teacher/flashcards">
+                <i class="bi bi-card-text"></i> Flashcards
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/teacher/subjects">
+                <i class="bi bi-book"></i> Subjects
+            </a>
+        </li>
+    </ul>
+</div>
+
+<!-- Main Content -->
+<div id="mainContent">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Teacher Dashboard</h1>
+        <div class="btn-toolbar mb-2 mb-md-0">
+            <div class="btn-group me-2">
+                <a href="/teacher/create-quiz" class="btn btn-sm btn-outline-primary">
+                    <i class="bi bi-plus-circle"></i> New Quiz
+                </a>
+                <a href="/teacher/upload-material" class="btn btn-sm btn-outline-secondary">
+                    <i class="bi bi-upload"></i> Upload Material
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-4 mb-4">
+            <div class="card dashboard-card border-primary">
+                <div class="card-body text-center">
+                    <i class="bi bi-file-earmark-text text-primary" style="font-size: 2rem;"></i>
+                    <h5 class="card-title mt-3">Materials</h5>
+                    <p class="card-text" th:text="${user.materials != null ? user.materials.size() : 0}">0</p>
+                    <a href="/teacher/materials" class="btn btn-sm btn-primary">View All</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card dashboard-card border-success">
+                <div class="card-body text-center">
+                    <i class="bi bi-question-circle text-success" style="font-size: 2rem;"></i>
+                    <h5 class="card-title mt-3">Quizzes</h5>
+                    <p class="card-text" th:text="${user.quizzes != null ? user.quizzes.size() : 0}">0</p>
+                    <a href="/teacher/quizzes" class="btn btn-sm btn-success">View All</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card dashboard-card border-info">
+                <div class="card-body text-center">
+                    <i class="bi bi-card-text text-info" style="font-size: 2rem;"></i>
+                    <h5 class="card-title mt-3">Flashcards</h5>
+                    <p class="card-text">0</p>
+                    <a href="/teacher/flashcards" class="btn btn-sm btn-info">View All</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="mb-0">Recent Materials</h5>
+                </div>
+                <div class="card-body">
+                    <div th:if="${user.materials == null || user.materials.isEmpty()}" class="text-center py-4">
+                        <i class="bi bi-file-earmark-x text-muted" style="font-size: 2rem;"></i>
+                        <p class="mt-3">No materials uploaded yet</p>
+                        <a href="/teacher/upload-material" class="btn btn-primary btn-sm">Upload Material</a>
+                    </div>
+                    <ul th:if="${user.materials != null && !user.materials.isEmpty()}" class="list-group list-group-flush">
+                        <li th:each="material : ${user.materials}" class="list-group-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <span th:text="${material.title}">Material Title</span>
+                                <small class="d-block text-muted" th:text="${#temporals.format(material.createdAt, 'dd MMM yyyy')}">01 Jan 2025</small>
+                            </div>
+                            <span class="badge bg-primary rounded-pill" th:text="${material.fileType}">PDF</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-footer">
+                    <a href="/teacher/materials" class="btn btn-sm btn-outline-secondary">View All Materials</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="mb-0">Recent Quizzes</h5>
+                </div>
+                <div class="card-body">
+                    <div th:if="${user.quizzes == null || user.quizzes.isEmpty()}" class="text-center py-4">
+                        <i class="bi bi-question-square text-muted" style="font-size: 2rem;"></i>
+                        <p class="mt-3">No quizzes created yet</p>
+                        <a href="/teacher/create-quiz" class="btn btn-primary btn-sm">Create Quiz</a>
+                    </div>
+                    <ul th:if="${user.quizzes != null && !user.quizzes.isEmpty()}" class="list-group list-group-flush">
+                        <li th:each="quiz : ${user.quizzes}" class="list-group-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <span th:text="${quiz.title}">Quiz Title</span>
+                                <small class="d-block text-muted" th:text="${#temporals.format(quiz.createdAt, 'dd MMM yyyy')}">01 Jan 2025</small>
+                            </div>
+                            <span class="badge bg-success rounded-pill" th:text="${quiz.questions != null ? quiz.questions.size() : 0} + ' questions'">0 questions</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-footer">
+                    <a href="/teacher/quizzes" class="btn btn-sm btn-outline-secondary">View All Quizzes</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

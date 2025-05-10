@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - TestCraft AI</title>
+</head>
+<body>
+<div th:replace="~{fragments/dashboard-layout :: html}">
+    <!-- This content will be replaced by the dashboard layout -->
+</div>
+
+<!-- Sidebar Content -->
+<div id="sidebarContent">
+    <h5 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+        <span>Student Menu</span>
+    </h5>
+    <ul class="nav flex-column">
+        <li class="nav-item">
+            <a class="nav-link active" href="/student/dashboard">
+                <i class="bi bi-speedometer2"></i> Dashboard
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/student/quizzes">
+                <i class="bi bi-question-circle"></i> Available Quizzes
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/student/results">
+                <i class="bi bi-graph-up"></i> My Results
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/student/flashcards">
+                <i class="bi bi-card-text"></i> Flashcards
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/student/subjects">
+                <i class="bi bi-book"></i> Subjects
+            </a>
+        </li>
+    </ul>
+</div>
+
+<!-- Main Content -->
+<div id="mainContent">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Student Dashboard</h1>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-4 mb-4">
+            <div class="card dashboard-card border-primary">
+                <div class="card-body text-center">
+                    <i class="bi bi-question-circle text-primary" style="font-size: 2rem;"></i>
+                    <h5 class="card-title mt-3">Available Quizzes</h5>
+                    <p class="card-text">0</p>
+                    <a href="/student/quizzes" class="btn btn-sm btn-primary">View All</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card dashboard-card border-success">
+                <div class="card-body text-center">
+                    <i class="bi bi-check-circle text-success" style="font-size: 2rem;"></i>
+                    <h5 class="card-title mt-3">Completed Quizzes</h5>
+                    <p class="card-text">0</p>
+                    <a href="/student/results" class="btn btn-sm btn-success">View Results</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card dashboard-card border-info">
+                <div class="card-body text-center">
+                    <i class="bi bi-card-text text-info" style="font-size: 2rem;"></i>
+                    <h5 class="card-title mt-3">Flashcards</h5>
+                    <p class="card-text">0</p>
+                    <a href="/student/flashcards" class="btn btn-sm btn-info">View All</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="mb-0">Recent Quizzes</h5>
+                </div>
+                <div class="card-body">
+                    <div class="text-center py-4">
+                        <i class="bi bi-question-square text-muted" style="font-size: 2rem;"></i>
+                        <p class="mt-3">No quizzes available yet</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="mb-0">Recent Results</h5>
+                </div>
+                <div class="card-body">
+                    <div class="text-center py-4">
+                        <i class="bi bi-clipboard-data text-muted" style="font-size: 2rem;"></i>
+                        <p class="mt-3">No quiz results yet</p>
+                        <a href="/student/quizzes" class="btn btn-primary btn-sm">Take a Quiz</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
