@@ -64,11 +64,6 @@
             <div class="card-body">
                 <form th:action="@{/teacher/quizzes/create}" method="post">
                     <div class="mb-3">
-                        <label for="title" class="form-label">Quiz Title</label>
-                        <input type="text" class="form-control" id="title" name="title" required>
-                    </div>
-
-                    <div class="mb-3">
                         <label for="materialId" class="form-label">Select Material</label>
                         <select class="form-select" id="materialId" name="materialId" required>
                             <option value="" selected disabled>Select a material</option>

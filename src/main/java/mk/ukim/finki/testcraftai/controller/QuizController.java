@@ -62,7 +62,6 @@ public class QuizController {
     @PostMapping("/create")
     public String createQuiz(
             @RequestParam("materialId") Long materialId,
-            @RequestParam("title") String title,
             @RequestParam("subjectId") Long subjectId,
             @RequestParam("numberOfQuestions") int numberOfQuestions,
             @RequestParam("questionTypes") List<Question.QuestionType> questionTypes,
@@ -74,7 +73,6 @@ public class QuizController {
                     .orElseThrow(() -> new IllegalArgumentException("Material not found with ID: " + materialId));
 
             QuizGenerationRequest request = new QuizGenerationRequest();
-            request.setTitle(title);
             request.setSubjectId(subjectId);
             request.setNumberOfQuestions(numberOfQuestions);
             request.setQuestionTypes(questionTypes);
