@@ -6,122 +6,118 @@
     <title>Quiz Details - TestCraft AI</title>
 </head>
 <body>
-<div th:replace="~{fragments/dashboard-layout :: html}">
-    <!-- This content will be replaced by the dashboard layout -->
-</div>
-
-<!-- Sidebar Content -->
-<div id="sidebarContent">
-    <h5 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-        <span>Teacher Menu</span>
-    </h5>
-    <ul class="nav flex-column">
-        <li class="nav-item">
-            <a class="nav-link" href="/teacher/dashboard">
-                <i class="bi bi-speedometer2"></i> Dashboard
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="/teacher/materials">
-                <i class="bi bi-file-earmark-text"></i> My Materials
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link active" href="/teacher/quizzes">
-                <i class="bi bi-question-circle"></i> My Quizzes
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="/teacher/quizzes/create">
-                <i class="bi bi-plus-circle"></i> Create Quiz
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="/teacher/flashcards">
-                <i class="bi bi-card-text"></i> Flashcards
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="/teacher/subjects">
-                <i class="bi bi-book"></i> Subjects
-            </a>
-        </li>
-    </ul>
-</div>
-
-<!-- Main Content -->
-<div id="mainContent">
-    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2" th:text="${quiz.title}">Quiz Title</h1>
-        <div class="btn-toolbar mb-2 mb-md-0">
-            <a href="/teacher/quizzes" class="btn btn-outline-secondary me-2">
-                <i class="bi bi-arrow-left"></i> Back to Quizzes
-            </a>
-            <div class="btn-group">
-                <a href="#" class="btn btn-outline-primary">
-                    <i class="bi bi-download"></i> Export PDF
+<div th:replace="~{fragments/dashboard-layout :: html(sidebarContent=~{::sidebarContent}, mainContent=~{::mainContent})}">
+    <div th:fragment="sidebarContent">
+        <h5 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+            <span>Teacher Menu</span>
+        </h5>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link" href="/teacher/dashboard">
+                    <i class="bi bi-speedometer2"></i> Dashboard
                 </a>
-                <a href="#" class="btn btn-outline-success">
-                    <i class="bi bi-google"></i> Create Google Form
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/teacher/materials">
+                    <i class="bi bi-file-earmark-text"></i> My Materials
                 </a>
-            </div>
-        </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="/teacher/quizzes">
+                    <i class="bi bi-question-circle"></i> My Quizzes
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/teacher/quizzes/create">
+                    <i class="bi bi-plus-circle"></i> Create Quiz
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/teacher/flashcards">
+                    <i class="bi bi-card-text"></i> Flashcards
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/teacher/subjects">
+                    <i class="bi bi-book"></i> Subjects
+                </a>
+            </li>
+        </ul>
     </div>
 
-    <div class="row mb-4">
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">Quiz Information</h5>
-                </div>
-                <div class="card-body">
-                    <p><strong>Subject:</strong> <span th:text="${quiz.subject.name}">Subject Name</span></p>
-                    <p><strong>Questions:</strong> <span th:text="${quiz.questions.size()}">10</span></p>
-                    <p><strong>Created:</strong> <span th:text="${#temporals.format(quiz.createdAt, 'dd MMM yyyy HH:mm')}">01 Jan 2025 12:00</span></p>
-                    <p th:if="${quiz.description}"><strong>Description:</strong> <span th:text="${quiz.description}">Quiz description</span></p>
+    <div th:fragment="mainContent">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <h1 class="h2" th:text="${quiz.title}">Quiz Title</h1>
+            <div class="btn-toolbar mb-2 mb-md-0">
+                <a href="/teacher/quizzes" class="btn btn-outline-secondary me-2">
+                    <i class="bi bi-arrow-left"></i> Back to Quizzes
+                </a>
+                <div class="btn-group">
+                    <a href="#" class="btn btn-outline-primary">
+                        <i class="bi bi-download"></i> Export PDF
+                    </a>
+                    <a href="#" class="btn btn-outline-success">
+                        <i class="bi bi-google"></i> Create Google Form
+                    </a>
                 </div>
             </div>
         </div>
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">Preview</h5>
-                    <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" id="showAnswers" checked>
-                        <label class="form-check-label" for="showAnswers">Show Answers</label>
+
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Quiz Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Subject:</strong> <span th:text="${quiz.subject.name}">Subject Name</span></p>
+                        <p><strong>Questions:</strong> <span th:text="${quiz.questions.size()}">10</span></p>
+                        <p><strong>Created:</strong> <span th:text="${#temporals.format(quiz.createdAt, 'dd MMM yyyy HH:mm')}">01 Jan 2025 12:00</span></p>
+                        <p th:if="${quiz.description}"><strong>Description:</strong> <span th:text="${quiz.description}">Quiz description</span></p>
                     </div>
                 </div>
-                <div class="card-body">
-                    <div class="alert alert-info">
-                        This is a preview of how the quiz will appear to students. Use the toggle to show/hide correct answers.
+            </div>
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Preview</h5>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="showAnswers" checked>
+                            <label class="form-check-label" for="showAnswers">Show Answers</label>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-info">
+                            This is a preview of how the quiz will appear to students. Use the toggle to show/hide correct answers.
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="card mb-4">
-        <div class="card-header">
-            <h5 class="mb-0">Questions</h5>
-        </div>
-        <div class="card-body">
-            <div th:each="question, qStat : ${quiz.questions}" class="mb-4">
-                <div class="question-card p-3 border rounded">
-                    <h5 class="mb-3">
-                        <span th:text="${qStat.count + '. ' + question.questionText}">1. Question text goes here?</span>
-                        <span class="badge" th:classappend="${question.type.name() == 'MULTIPLE_CHOICE' ? 'bg-primary' : 'bg-success'}"
-                              th:text="${question.type.name() == 'MULTIPLE_CHOICE' ? 'Multiple Choice' : 'True/False'}">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Questions</h5>
+            </div>
+            <div class="card-body">
+                <div th:each="question, qStat : ${quiz.questions}" class="mb-4">
+                    <div class="question-card p-3 border rounded">
+                        <h5 class="mb-3">
+                            <span th:text="${qStat.count + '. ' + question.questionText}">1. Question text goes here?</span>
+                            <span class="badge" th:classappend="${question.type.name() == 'MULTIPLE_CHOICE' ? 'bg-primary' : 'bg-success'}"
+                                  th:text="${question.type.name() == 'MULTIPLE_CHOICE' ? 'Multiple Choice' : 'True/False'}">
                                 Question Type
                             </span>
-                    </h5>
+                        </h5>
 
-                    <div class="options-list">
-                        <div th:each="option : ${question.options}" class="form-check mb-2">
-                            <input class="form-check-input" type="radio" th:name="${'question-' + question.id}" disabled>
-                            <label class="form-check-label" th:classappend="${option.isCorrect ? 'text-success fw-bold answer-correct' : ''}">
-                                <span th:text="${option.optionText}">Option text</span>
-                                <i th:if="${option.isCorrect}" class="bi bi-check-circle-fill text-success ms-2 answer-indicator"></i>
-                            </label>
+                        <div class="options-list">
+                            <div th:each="option : ${question.options}" class="form-check mb-2">
+                                <input class="form-check-input" type="radio" th:name="${'question-' + question.id}" disabled>
+                                <label class="form-check-label" th:classappend="${option.isCorrect ? 'text-success fw-bold answer-correct' : ''}">
+                                    <span th:text="${option.optionText}">Option text</span>
+                                    <i th:if="${option.isCorrect}" class="bi bi-check-circle-fill text-success ms-2 answer-indicator"></i>
+                                </label>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -129,23 +125,5 @@
         </div>
     </div>
 </div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const showAnswersToggle = document.getElementById('showAnswers');
-        const answerIndicators = document.querySelectorAll('.answer-indicator');
-        const correctAnswers = document.querySelectorAll('.answer-correct');
-
-        showAnswersToggle.addEventListener('change', function() {
-            if (this.checked) {
-                answerIndicators.forEach(el => el.style.display = 'inline');
-                correctAnswers.forEach(el => el.classList.add('text-success', 'fw-bold'));
-            } else {
-                answerIndicators.forEach(el => el.style.display = 'none');
-                correctAnswers.forEach(el => el.classList.remove('text-success', 'fw-bold'));
-            }
-        });
-    });
-</script>
 </body>
 </html>

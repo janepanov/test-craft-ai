@@ -81,21 +81,17 @@
     <div class="row">
         <!-- Sidebar -->
         <div class="col-md-3 col-lg-2 sidebar py-3">
-            <div th:replace="~{:: #sidebarContent}">
+            <div th:insert="${sidebarContent}">
                 <!-- This will be replaced by the specific sidebar content from each page -->
-                <div id="sidebarContent">
-                    <p>Default sidebar content</p>
-                </div>
+                <p>Default sidebar content</p>
             </div>
         </div>
 
         <!-- Main Content -->
         <div class="col-md-9 col-lg-10 main-content">
-            <div th:replace="~{:: #mainContent}">
+            <div th:insert="${mainContent}">
                 <!-- This will be replaced by the specific main content from each page -->
-                <div id="mainContent">
-                    <p>Default main content</p>
-                </div>
+                <p>Default main content</p>
             </div>
         </div>
     </div>

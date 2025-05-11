@@ -4,100 +4,106 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Upload Material - TestCraft AI</title>
+    <!-- Include Bootstrap CSS -->
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <!-- Include custom styles -->
+    <link th:href="@{/css/styles.css}" rel="stylesheet">
+    <!-- Include Bootstrap Icons -->
+    <link th:href="@{/css/bootstrap-icons.css}" rel="stylesheet">
 </head>
 <body>
-<div th:replace="~{fragments/dashboard-layout :: html}">
-    <!-- This content will be replaced by the dashboard layout -->
-</div>
-
-<!-- Sidebar Content -->
-<div id="sidebarContent">
-    <h5 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-        <span>Teacher Menu</span>
-    </h5>
-    <ul class="nav flex-column">
-        <li class="nav-item">
-            <a class="nav-link" href="/teacher/dashboard">
-                <i class="bi bi-speedometer2"></i> Dashboard
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link active" href="/teacher/materials">
-                <i class="bi bi-file-earmark-text"></i> My Materials
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="/teacher/quizzes">
-                <i class="bi bi-question-circle"></i> My Quizzes
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="/teacher/quizzes/create">
-                <i class="bi bi-plus-circle"></i> Create Quiz
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="/teacher/flashcards">
-                <i class="bi bi-card-text"></i> Flashcards
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="/teacher/subjects">
-                <i class="bi bi-book"></i> Subjects
-            </a>
-        </li>
-    </ul>
-</div>
-
-<!-- Main Content -->
-<div id="mainContent">
-    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Upload Material</h1>
-        <div class="btn-toolbar mb-2 mb-md-0">
-            <a href="/teacher/materials" class="btn btn-outline-secondary">
-                <i class="bi bi-arrow-left"></i> Back to Materials
-            </a>
+<div th:replace="~{fragments/dashboard-layout :: html(sidebarContent=~{::sidebarContent}, mainContent=~{::mainContent})}">
+    <div th:fragment="sidebarContent">
+        <h5 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+            <span>Teacher Menu</span>
+        </h5>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link" href="/teacher/dashboard">
+                    <i class="bi bi-speedometer2"></i> Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="/teacher/materials">
+                    <i class="bi bi-file-earmark-text"></i> My Materials
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/teacher/quizzes">
+                    <i class="bi bi-question-circle"></i> My Quizzes
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/teacher/quizzes/create">
+                    <i class="bi bi-plus-circle"></i> Create Quiz
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/teacher/flashcards">
+                    <i class="bi bi-card-text"></i> Flashcards
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/teacher/subjects">
+                    <i class="bi bi-book"></i> Subjects
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div th:fragment="mainContent">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <h1 class="h2">Upload Material</h1>
+            <div class="btn-toolbar mb-2 mb-md-0">
+                <a href="/teacher/materials" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> Back to Materials
+                </a>
+            </div>
         </div>
-    </div>
 
-    <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
-        <span th:text="${error}">Error message</span>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <span th:text="${error}">Error message</span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
 
-    <div class="card">
-        <div class="card-body">
-            <form th:action="@{/teacher/materials/upload}" method="post" enctype="multipart/form-data">
-                <div class="mb-3">
-                    <label for="title" class="form-label">Material Title</label>
-                    <input type="text" class="form-control" id="title" name="title" required>
-                </div>
-
-                <div class="mb-3">
-                    <label for="subjectId" class="form-label">Subject</label>
-                    <select class="form-select" id="subjectId" name="subjectId" required>
-                        <option value="" selected disabled>Select a subject</option>
-                        <option th:each="subject : ${subjects}" th:value="${subject.id}" th:text="${subject.name}">Subject Name</option>
-                    </select>
-                    <div class="form-text">
-                        <a href="/teacher/subjects/create">Create a new subject</a> if yours is not listed.
+        <div class="card">
+            <div class="card-body">
+                <form th:action="@{/teacher/materials/upload}" method="post" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Material Title</label>
+                        <input type="text" class="form-control" id="title" name="title" required>
                     </div>
-                </div>
 
-                <div class="mb-3">
-                    <label for="file" class="form-label">Upload File</label>
-                    <input type="file" class="form-control" id="file" name="file" required accept=".pdf,.docx,.txt">
-                    <div class="form-text">Supported file types: PDF, DOCX, TXT. Maximum file size: 10MB.</div>
-                </div>
+                    <div class="mb-3">
+                        <label for="subjectId" class="form-label">Subject</label>
+                        <select class="form-select" id="subjectId" name="subjectId" required>
+                            <option value="" selected disabled>Select a subject</option>
+                            <option th:each="subject : ${subjects}" th:value="${subject.id}" th:text="${subject.name}">Subject Name</option>
+                        </select>
+                        <div class="form-text">
+                            <a href="/teacher/subjects/create">Create a new subject</a> if yours is not listed.
+                        </div>
+                    </div>
 
-                <div class="d-grid gap-2">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-upload"></i> Upload Material
-                    </button>
-                </div>
-            </form>
+                    <div class="mb-3">
+                        <label for="file" class="form-label">Upload File</label>
+                        <input type="file" class="form-control" id="file" name="file" required accept=".pdf,.docx,.txt">
+                        <div class="form-text">Supported file types: PDF, DOCX, TXT. Maximum file size: 10MB.</div>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-upload"></i> Upload Material
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>
+
+<!-- Include Bootstrap JS and dependencies -->
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+<!-- Include custom scripts -->
+<script th:src="@{/js/scripts.js}"></script>
 </body>
 </html>

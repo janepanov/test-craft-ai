@@ -6,105 +6,101 @@
     <title>Material Details - TestCraft AI</title>
 </head>
 <body>
-<div th:replace="~{fragments/dashboard-layout :: html}">
-    <!-- This content will be replaced by the dashboard layout -->
-</div>
-
-<!-- Sidebar Content -->
-<div id="sidebarContent">
-    <h5 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-        <span>Teacher Menu</span>
-    </h5>
-    <ul class="nav flex-column">
-        <li class="nav-item">
-            <a class="nav-link" href="/teacher/dashboard">
-                <i class="bi bi-speedometer2"></i> Dashboard
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link active" href="/teacher/materials">
-                <i class="bi bi-file-earmark-text"></i> My Materials
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="/teacher/quizzes">
-                <i class="bi bi-question-circle"></i> My Quizzes
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="/teacher/quizzes/create">
-                <i class="bi bi-plus-circle"></i> Create Quiz
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="/teacher/flashcards">
-                <i class="bi bi-card-text"></i> Flashcards
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="/teacher/subjects">
-                <i class="bi bi-book"></i> Subjects
-            </a>
-        </li>
-    </ul>
-</div>
-
-<!-- Main Content -->
-<div id="mainContent">
-    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2" th:text="${material.title}">Material Title</h1>
-        <div class="btn-toolbar mb-2 mb-md-0">
-            <a href="/teacher/materials" class="btn btn-outline-secondary me-2">
-                <i class="bi bi-arrow-left"></i> Back to Materials
-            </a>
-            <a th:href="@{/teacher/quizzes/create(materialId=${material.id})}"
-               class="btn btn-success">
-                <i class="bi bi-plus-circle"></i> Create Quiz
-            </a>
-        </div>
+<div th:replace="~{fragments/dashboard-layout :: html(sidebarContent=~{::sidebarContent}, mainContent=~{::mainContent})}">
+    <div th:fragment="sidebarContent">
+        <h5 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+            <span>Teacher Menu</span>
+        </h5>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link" href="/teacher/dashboard">
+                    <i class="bi bi-speedometer2"></i> Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="/teacher/materials">
+                    <i class="bi bi-file-earmark-text"></i> My Materials
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/teacher/quizzes">
+                    <i class="bi bi-question-circle"></i> My Quizzes
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/teacher/quizzes/create">
+                    <i class="bi bi-plus-circle"></i> Create Quiz
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/teacher/flashcards">
+                    <i class="bi bi-card-text"></i> Flashcards
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/teacher/subjects">
+                    <i class="bi bi-book"></i> Subjects
+                </a>
+            </li>
+        </ul>
     </div>
 
-    <div class="row mb-4">
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">Material Information</h5>
-                </div>
-                <div class="card-body">
-                    <p><strong>Subject:</strong> <span th:text="${material.subject.name}">Subject Name</span></p>
-                    <p><strong>File Type:</strong>
-                        <span th:if="${material.fileType.name() == 'PDF'}" class="badge bg-danger">PDF</span>
-                        <span th:if="${material.fileType.name() == 'DOCX'}" class="badge bg-primary">DOCX</span>
-                        <span th:if="${material.fileType.name() == 'TXT'}" class="badge bg-secondary">TXT</span>
-                    </p>
-                    <p><strong>Uploaded:</strong> <span th:text="${#temporals.format(material.createdAt, 'dd MMM yyyy HH:mm')}">01 Jan 2025 12:00</span></p>
-                </div>
+    <div th:fragment="mainContent">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <h1 class="h2" th:text="${material.title}">Material Title</h1>
+            <div class="btn-toolbar mb-2 mb-md-0">
+                <a href="/teacher/materials" class="btn btn-outline-secondary me-2">
+                    <i class="bi bi-arrow-left"></i> Back to Materials
+                </a>
+                <a th:href="@{/teacher/quizzes/create(materialId=${material.id})}"
+                   class="btn btn-success">
+                    <i class="bi bi-plus-circle"></i> Create Quiz
+                </a>
             </div>
         </div>
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">Content Preview</h5>
+
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Material Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Subject:</strong> <span th:text="${material.subject.name}">Subject Name</span></p>
+                        <p><strong>File Type:</strong>
+                            <span th:if="${material.fileType.name() == 'PDF'}" class="badge bg-danger">PDF</span>
+                            <span th:if="${material.fileType.name() == 'DOCX'}" class="badge bg-primary">DOCX</span>
+                            <span th:if="${material.fileType.name() == 'TXT'}" class="badge bg-secondary">TXT</span>
+                        </p>
+                        <p><strong>Uploaded:</strong> <span th:text="${#temporals.format(material.createdAt, 'dd MMM yyyy HH:mm')}">01 Jan 2025 12:00</span></p>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <div class="content-preview p-3 bg-light rounded" style="max-height: 400px; overflow-y: auto;">
-                        <pre th:text="${material.content}" style="white-space: pre-wrap; font-family: inherit;">Material content goes here...</pre>
+            </div>
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Content Preview</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="content-preview p-3 bg-light rounded" style="max-height: 400px; overflow-y: auto;">
+                            <pre th:text="${material.content}" style="white-space: pre-wrap; font-family: inherit;">Material content goes here...</pre>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="card">
-        <div class="card-header">
-            <h5 class="mb-0">Generated Quizzes</h5>
-        </div>
-        <div class="card-body">
-            <p>No quizzes have been generated from this material yet.</p>
-            <a th:href="@{/teacher/quizzes/create(materialId=${material.id})}"
-               class="btn btn-primary">
-                <i class="bi bi-plus-circle"></i> Generate Quiz Now
-            </a>
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Generated Quizzes</h5>
+            </div>
+            <div class="card-body">
+                <p>No quizzes have been generated from this material yet.</p>
+                <a th:href="@{/teacher/quizzes/create(materialId=${material.id})}"
+                   class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i> Generate Quiz Now
+                </a>
+            </div>
         </div>
     </div>
 </div>
