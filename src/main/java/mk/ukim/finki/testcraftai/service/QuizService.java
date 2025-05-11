@@ -51,6 +51,11 @@ public class QuizService {
         // Generate quiz questions using OpenAI
         QuizGenerationResponse response = openAIService.generateQuiz(materialContent, request);
 
+        // Filter questions based on selected question types
+        List<QuizGenerationResponse.QuestionDto> filteredQuestions = response.getQuestions().stream()
+                .filter(question -> request.getQuestionTypes().contains(question.getType()))
+                .toList();
+
         // Create the quiz
         Quiz quiz = new Quiz();
         quiz.setTitle(response.getTitle());
@@ -62,7 +67,7 @@ public class QuizService {
         Quiz savedQuiz = quizRepository.save(quiz);
 
         // Create questions and options
-        for (QuizGenerationResponse.QuestionDto questionDto : response.getQuestions()) {
+        for (QuizGenerationResponse.QuestionDto questionDto : filteredQuestions) {
             Question question = new Question();
             question.setQuestionText(questionDto.getQuestionText());
             question.setType(questionDto.getType());

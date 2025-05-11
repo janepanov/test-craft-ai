@@ -50,6 +50,13 @@ public class OpenAIService {
      * @return formatted prompt text
      */
     private String buildQuizGenerationPrompt(String content, QuizGenerationRequest request) {
+        String questionTypes = request.getQuestionTypes().stream()
+                .map(Enum::name)
+                .map(String::toLowerCase)
+                .map(type -> type.replace("_", " "))
+                .reduce((a, b) -> a + " and " + b)
+                .orElse("questions");
+
         return String.format(
                 """
                         You are an expert educational content creator specializing in creating quiz questions.
@@ -58,7 +65,7 @@ public class OpenAIService {
                         The quiz should focus on the most important concepts and information in the material.
                         
                         For each question:
-                        - Create %s type questions
+                        - Create %s type questions only
                         - Ensure questions test understanding, not just memorization
                         - Make sure all questions are directly based on the provided content
                         - For multiple-choice questions, provide 4 options with exactly one correct answer
@@ -91,7 +98,7 @@ public class OpenAIService {
                         Educational content:
                         "%s\"""",
                 request.getNumberOfQuestions(),
-                request.getQuestionTypes().toString(),
+                questionTypes,
                 content
         );
     }
