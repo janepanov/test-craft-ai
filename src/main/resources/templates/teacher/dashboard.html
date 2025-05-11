@@ -105,12 +105,14 @@
                             <a href="/teacher/materials/upload" class="btn btn-primary btn-sm">Upload Material</a>
                         </div>
                         <ul th:if="${user.materials != null && !user.materials.isEmpty()}" class="list-group list-group-flush">
-                            <li th:each="material : ${user.materials}" class="list-group-item d-flex justify-content-between align-items-center">
-                                <div>
-                                    <span th:text="${material.title}">Material Title</span>
-                                    <small class="d-block text-muted" th:text="${#temporals.format(material.createdAt, 'dd MMM yyyy')}">01 Jan 2025</small>
-                                </div>
-                                <span class="badge bg-primary rounded-pill" th:text="${material.fileType}">PDF</span>
+                            <li th:each="material : ${user.materials}" class="list-group-item">
+                                <a th:href="@{/teacher/materials/{id}(id=${material.id})}" class="d-flex justify-content-between align-items-center text-decoration-none">
+                                    <div>
+                                        <span th:text="${material.title}">Material Title</span>
+                                        <small class="d-block text-muted" th:text="${#temporals.format(material.createdAt, 'dd MMM yyyy')}">01 Jan 2025</small>
+                                    </div>
+                                    <span class="badge bg-primary rounded-pill" th:text="${material.fileType}">PDF</span>
+                                </a>
                             </li>
                         </ul>
                     </div>
@@ -132,12 +134,14 @@
                             <a href="/teacher/quizzes/create" class="btn btn-primary btn-sm">Create Quiz</a>
                         </div>
                         <ul th:if="${user.quizzes != null && !user.quizzes.isEmpty()}" class="list-group list-group-flush">
-                            <li th:each="quiz : ${user.quizzes}" class="list-group-item d-flex justify-content-between align-items-center">
-                                <div>
-                                    <span th:text="${quiz.title}">Quiz Title</span>
-                                    <small class="d-block text-muted" th:text="${#temporals.format(quiz.createdAt, 'dd MMM yyyy')}">01 Jan 2025</small>
-                                </div>
-                                <span class="badge bg-success rounded-pill" th:text="${quiz.questions != null ? quiz.questions.size() : 0} + ' questions'">0 questions</span>
+                            <li th:each="quiz : ${user.quizzes}" class="list-group-item">
+                                <a th:href="@{/teacher/quizzes/{id}(id=${quiz.id})}" class="d-flex justify-content-between align-items-center text-decoration-none">
+                                    <div>
+                                        <span th:text="${quiz.title}">Quiz Title</span>
+                                        <small class="d-block text-muted" th:text="${#temporals.format(quiz.createdAt, 'dd MMM yyyy')}">01 Jan 2025</small>
+                                    </div>
+                                    <span class="badge bg-success rounded-pill" th:text="${quiz.questions != null ? quiz.questions.size() : 0} + ' questions'">0 questions</span>
+                                </a>
                             </li>
                         </ul>
                     </div>
