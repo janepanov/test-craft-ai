@@ -1,5 +1,6 @@
 package mk.ukim.finki.testcraftai.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -28,6 +29,7 @@ public class QuizGenerationResponse {
     @AllArgsConstructor
     public static class OptionDto {
         private String optionText;
+        @JsonProperty(value = "isCorrect")
         private boolean isCorrect;
     }
 }

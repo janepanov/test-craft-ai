@@ -1,5 +1,6 @@
 package mk.ukim.finki.testcraftai.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,6 +21,7 @@ public class Option {
     private String optionText;
 
     @Column(nullable = false)
+    @JsonProperty("isCorrect")
     private boolean isCorrect;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -69,6 +69,8 @@ public class OpenAIService {
                         - Ensure questions test understanding, not just memorization
                         - Make sure all questions are directly based on the provided content
                         - For multiple-choice questions, provide 4 options with exactly one correct answer
+                        - For true/false questions, clearly indicate which option is correct
+                        - Clearly mark the correct answer for each question in the JSON response
                         
                         Return a JSON in this format:
                         {
