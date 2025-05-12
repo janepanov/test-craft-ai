@@ -56,9 +56,12 @@
                     <a href="#" class="btn btn-outline-primary">
                         <i class="bi bi-download"></i> Export PDF
                     </a>
-                    <a href="#" class="btn btn-outline-success">
-                        <i class="bi bi-google"></i> Create Google Form
-                    </a>
+                    <form th:action="@{/export-form}" method="get" class="d-inline">
+                        <input type="hidden" name="quizId" th:value="${quiz.id}" />
+                        <button type="submit" class="btn btn-outline-success">
+                            <i class="bi bi-google"></i> Create Google Form
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
