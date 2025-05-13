@@ -15,6 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -40,6 +42,8 @@ public class PdfService {
             content = new PDPageContentStream(document, page);
             float y = 750;
             float margin = 50;
+            float maxWidth = PDRectangle.A4.getWidth() - 2 * margin;
+            float lineHeight = 15;
 
             content.setFont(PDType1Font.HELVETICA_BOLD, 16);
             content.beginText();
@@ -50,11 +54,14 @@ public class PdfService {
             y -= 25;
             if (quiz.getDescription() != null) {
                 content.setFont(PDType1Font.HELVETICA, 12);
-                content.beginText();
-                content.newLineAtOffset(margin, y);
-                content.showText("Description: " + quiz.getDescription());
-                content.endText();
-                y -= 20;
+                y = writeWrappedText(
+                        content,
+                        "Description: " + quiz.getDescription(),
+                        margin,
+                        y,
+                        maxWidth,
+                        lineHeight);
+
             }
 
             int questionNumber = 1;
@@ -68,11 +75,13 @@ public class PdfService {
                 }
 
                 content.setFont(PDType1Font.HELVETICA_BOLD, 12);
-                content.beginText();
-                content.newLineAtOffset(margin, y);
-                content.showText(questionNumber + ". " + question.getQuestionText());
-                content.endText();
-                y -= 18;
+                y = writeWrappedText(
+                        content,
+                        questionNumber + ". " + question.getQuestionText(),
+                        margin,
+                        y - 10,
+                        maxWidth,
+                        lineHeight);
 
                 content.setFont(PDType1Font.HELVETICA, 11);
                 char optionLabel = 'A';
@@ -85,12 +94,13 @@ public class PdfService {
                         y = 750;
                     }
 
-                    content.beginText();
-                    content.newLineAtOffset(margin + 20, y);
-                    String line = optionLabel + ") " + option.getOptionText();
-                    content.showText(line);
-                    content.endText();
-                    y -= 15;
+                    y = writeWrappedText(
+                            content,
+                            optionLabel + ") " + option.getOptionText(),
+                            margin + 20,
+                            y - 5,
+                            maxWidth - 20,
+                            lineHeight);
                     optionLabel++;
                 }
 
@@ -113,5 +123,44 @@ public class PdfService {
         }
 
         return out.toByteArray();
+    }
+
+    private float writeWrappedText(PDPageContentStream contentStream, String text, float x, float y, float maxWidth, float lineHeight) throws IOException {
+        List<String> lines = wrapText(text, maxWidth);
+        for (String line : lines) {
+            if (y < 50) {
+                contentStream.close();
+                throw new IOException("Page overflow detected. Add logic to handle new pages.");
+            }
+            contentStream.beginText();
+            contentStream.newLineAtOffset(x, y);
+            contentStream.showText(line);
+            contentStream.endText();
+            y -= lineHeight;
+        }
+        return y;
+    }
+
+    private List<String> wrapText(String text, float maxWidth) throws IOException {
+        List<String> lines = new ArrayList<>();
+        String[] words = text.split(" ");
+        StringBuilder currentLine = new StringBuilder();
+
+        for (String word : words) {
+            String testLine = currentLine.isEmpty() ? word : currentLine + " " + word;
+            float textWidth = PDType1Font.HELVETICA.getStringWidth(testLine) / 1000 * 12; // Font size 12
+            if (textWidth > maxWidth) {
+                lines.add(currentLine.toString());
+                currentLine = new StringBuilder(word);
+            } else {
+                currentLine.append(currentLine.isEmpty() ? word : " " + word);
+            }
+        }
+
+        if (!currentLine.isEmpty()) {
+            lines.add(currentLine.toString());
+        }
+
+        return lines;
     }
 }
