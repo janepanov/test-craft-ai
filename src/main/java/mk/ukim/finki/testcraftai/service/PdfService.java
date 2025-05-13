@@ -88,9 +88,6 @@ public class PdfService {
                     content.beginText();
                     content.newLineAtOffset(margin + 20, y);
                     String line = optionLabel + ") " + option.getOptionText();
-                    if (option.isCorrect()) {
-                        line += "  ✓";
-                    }
                     content.showText(line);
                     content.endText();
                     y -= 15;
