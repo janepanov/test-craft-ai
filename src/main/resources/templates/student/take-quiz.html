@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Take Quiz</title>
+</head>
+<body>
+<div>
+    <h1 th:text="${quiz.title}">Quiz Title</h1>
+    <form th:action="@{/student/quizzes/{id}/submit(id=${quiz.id})}" method="post">
+        <div th:each="question : ${quiz.questions}">
+            <h3 th:text="${question.questionText}">Question Text</h3>
+            <div th:each="option : ${question.options}">
+                <label>
+                    <input type="checkbox" th:name="answers" th:value="${option.id}"/>
+                    <span th:text="${option.optionText}">Option Text</span>
+                </label>
+            </div>
+        </div>
+        <button type="submit">Submit</button>
+    </form>
+</div>
+</body>
+</html>

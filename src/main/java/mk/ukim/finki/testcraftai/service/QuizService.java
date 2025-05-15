@@ -9,8 +9,11 @@ import mk.ukim.finki.testcraftai.repository.OptionRepository;
 import mk.ukim.finki.testcraftai.repository.QuestionRepository;
 import mk.ukim.finki.testcraftai.repository.QuizRepository;
 import mk.ukim.finki.testcraftai.repository.SubjectRepository;
+import mk.ukim.finki.testcraftai.repository.ResultRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +32,7 @@ public class QuizService {
     private final SubjectRepository subjectRepository;
     private final UserService userService;
     private final OpenAIService openAIService;
+    private final ResultRepository resultRepository;
 
     /**
      * Generates a quiz from material content
@@ -137,5 +141,62 @@ public class QuizService {
      */
     public List<Quiz> getAllQuizzes() {
         return quizRepository.findAll();
+    }
+
+    /**
+     * Retrieves all quizzes available for students.
+     *
+     * @return list of quizzes
+     */
+    public List<Quiz> getAllAvailableQuizzes() {
+        return quizRepository.findAll(); // Adjust query if needed to filter quizzes
+    }
+
+    /**
+     * Handles quiz submission and calculates the score.
+     *
+     * @param quizId the ID of the quiz
+     * @param answers the student's answers
+     * @param username the username of the student
+     * @return the score result
+     */
+    @Transactional
+    public int calculateQuizScore(Long quizId, List<Long> answers, String username) {
+        // Retrieve the quiz by ID
+        Quiz quiz = quizRepository.findById(quizId)
+                .orElseThrow(() -> new IllegalArgumentException("Quiz not found with ID: " + quizId));
+
+        // Retrieve the student by username
+        User student = userService.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("User not found: " + username));
+
+        // Calculate the score
+        int correctAnswers = 0;
+        for (Question question : quiz.getQuestions()) {
+            for (Option option : question.getOptions()) {
+                if (option.isCorrect() && answers.contains(option.getId())) {
+                    correctAnswers++;
+                }
+            }
+        }
+
+        // Save the result
+        Result result = new Result();
+        result.setQuiz(quiz);
+        result.setStudent(student);
+        result.setScore(correctAnswers);
+        resultRepository.save(result);
+
+        return correctAnswers;
+    }
+
+    /**
+     * Retrieves recent quizzes.
+     *
+     * @return list of recent quizzes
+     */
+    public List<Quiz> getRecentQuizzes() {
+        // Fetch the 5 most recent quizzes sorted by creation date in descending order
+        return quizRepository.findAll(PageRequest.of(0, 5, Sort.by(Sort.Direction.DESC, "createdAt"))).getContent();
     }
 }

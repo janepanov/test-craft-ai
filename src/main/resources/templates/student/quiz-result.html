@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Result</title>
+</head>
+<body>
+<div>
+    <h1>Quiz Result</h1>
+    <p th:text="'You scored: ' + ${score} + ' out of ' + ${quiz.questions.size()}">Score</p>
+    <a href="/student/quizzes">Back to Quizzes</a>
+</div>
+</body>
+</html>
