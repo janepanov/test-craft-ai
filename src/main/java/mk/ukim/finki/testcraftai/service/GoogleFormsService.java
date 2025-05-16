@@ -1,38 +1,44 @@
 package mk.ukim.finki.testcraftai.service;
 
 import com.google.auth.oauth2.GoogleCredentials;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.RequiredArgsConstructor;
+import mk.ukim.finki.testcraftai.model.dto.QuestionOption;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+
 import java.io.IOException;
 import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class GoogleFormsService {
 
-    private final WebClient webClient;
-    private final String token;
+    private final WebClient.Builder webClientBuilder;
 
-    public GoogleFormsService() throws IOException {
+    private String getAccessToken() throws IOException {
         GoogleCredentials credentials = GoogleCredentials
                 .fromStream(new ClassPathResource("credentials.json").getInputStream())
-                .createScoped(Collections.singleton("https://www.googleapis.com/auth/forms.body"));
+                .createScoped(Arrays.asList(
+                        "https://www.googleapis.com/auth/forms.body",
+                        "https://www.googleapis.com/auth/drive"
+                ));
 
         credentials.refreshIfExpired();
-        this.token = credentials.refreshAccessToken().getTokenValue();
-
-        this.webClient = WebClient.builder()
-                .baseUrl("https://forms.googleapis.com/v1")
-                .defaultHeader("Authorization", "Bearer " + token)
-                .defaultHeader("Content-Type", "application/json")
-                .build();
+        return credentials.getAccessToken().getTokenValue();
     }
 
-    public String createFormFromQuiz(String title, List<String> questions) {
-        Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("info", Map.of("title", title));
+    public String createFormFromQuiz(String title, Map<String, List<QuestionOption>> questionsWithOptions) throws IOException {
+        String accessToken = getAccessToken();
 
+        WebClient webClient = webClientBuilder
+                .baseUrl("https://forms.googleapis.com/v1")
+                .defaultHeader("Authorization", "Bearer " + accessToken)
+                .defaultHeader("Content-Type", "application/json")
+                .build();
+
+        // Create the form
+        Map<String, Object> requestBody = Map.of("info", Map.of("title", title));
         Map<String, Object> form = webClient.post()
                 .uri("/forms")
                 .bodyValue(requestBody)
@@ -40,32 +46,91 @@ public class GoogleFormsService {
                 .bodyToMono(Map.class)
                 .block();
 
+        assert form != null;
         String formId = (String) form.get("formId");
 
-        for (int i = 0; i < questions.size(); i++) {
-            Map<String, Object> item = Map.of(
+        // Add questions to the form
+        addQuestionsToForm(formId, questionsWithOptions, accessToken);
+
+        // Share the form with your personal Google account
+        shareFormWithUser(formId, "panovjane@gmail.com", accessToken);
+
+        return "https://docs.google.com/forms/d/" + formId + "/edit";
+    }
+
+    private void addQuestionsToForm(String formId, Map<String, List<QuestionOption>> questionsWithOptions, String accessToken) {
+        WebClient webClient = webClientBuilder
+                .baseUrl("https://forms.googleapis.com/v1/forms/" + formId + ":batchUpdate")
+                .defaultHeader("Authorization", "Bearer " + accessToken)
+                .defaultHeader("Content-Type", "application/json")
+                .build();
+
+        List<Map<String, Object>> requests = new ArrayList<>();
+        int index = 0;
+
+        for (Map.Entry<String, List<QuestionOption>> entry : questionsWithOptions.entrySet()) {
+            String questionText = entry.getKey();
+            List<QuestionOption> options = entry.getValue();
+
+            boolean isMultipleChoice = options.size() > 2;
+
+            // Correctly declare the options as List<Map<String, Object>>
+            List<Map<String, Object>> formattedOptions = options.stream()
+                    .map(option -> Map.of("value", (Object) option.getText()))
+                    .toList();
+
+            Map<String, Object> questionRequest = Map.of(
                     "createItem", Map.of(
                             "item", Map.of(
-                                    "title", questions.get(i),
+                                    "title", questionText,
                                     "questionItem", Map.of(
                                             "question", Map.of(
                                                     "required", true,
-                                                    "textQuestion", new HashMap<>()
+                                                    "choiceQuestion", Map.of(
+                                                            "type", isMultipleChoice ? "CHECKBOX" : "RADIO",
+                                                            "options", formattedOptions
+                                                    )
                                             )
                                     )
                             ),
-                            "location", Map.of("index", i)
+                            "location", Map.of("index", index)
                     )
             );
 
-            webClient.post()
-                    .uri("/forms/" + formId + ":batchUpdate")
-                    .bodyValue(Map.of("requests", List.of(item)))
-                    .retrieve()
-                    .bodyToMono(Void.class)
-                    .block();
+            requests.add(questionRequest);
+            index++;
         }
 
-        return "https://docs.google.com/forms/d/" + formId + "/edit";
+        Map<String, Object> payload = Map.of("requests", requests);
+
+        // Log the payload for debugging
+        System.out.println("Payload: " + payload);
+
+        webClient.post()
+                .bodyValue(payload)
+                .retrieve()
+                .bodyToMono(Void.class)
+                .block();
+    }
+
+    private void shareFormWithUser(String formId, String email, String accessToken) {
+        WebClient webClient = webClientBuilder
+                .baseUrl("https://www.googleapis.com/drive/v3/files")
+                .defaultHeader("Authorization", "Bearer " + accessToken)
+                .defaultHeader("Content-Type", "application/json")
+                .build();
+
+        Map<String, Object> permission = Map.of(
+                "type", "user",
+                "role", "writer",
+                "emailAddress", email
+        );
+
+        webClient.post()
+                .uri("/" + formId + "/permissions?sendNotificationEmail=false")
+                .bodyValue(permission)
+                .retrieve()
+                .bodyToMono(Void.class)
+                .block();
     }
 }
