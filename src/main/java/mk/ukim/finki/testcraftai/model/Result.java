@@ -32,8 +32,12 @@ public class Result {
     @Column(nullable = false)
     private LocalDateTime completedAt;
 
+    @Column(nullable = false)
+    private LocalDateTime createdAt;
+
     @PrePersist
     protected void onCreate() {
         completedAt = LocalDateTime.now();
+        createdAt = LocalDateTime.now();
     }
 }

@@ -8,6 +8,7 @@ import mk.ukim.finki.testcraftai.repository.ResultRepository;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,15 +54,20 @@ public class ResultService {
     }
 
     /**
-     * Retrieves the result for a specific quiz and student.
+     * Retrieves the most recent result for a specific quiz and student.
      *
      * @param quiz the quiz
      * @param username the username of the student
-     * @return optional containing the result if found
+     * @return optional containing the most recent result if found
      */
     public Optional<Result> getResultByQuizAndStudent(Quiz quiz, String username) {
         User student = userService.findByUsername(username)
                 .orElseThrow(() -> new IllegalArgumentException("User not found: " + username));
-        return resultRepository.findByQuizAndStudent(quiz, student);
+
+        List<Result> results = resultRepository.findByQuizAndStudent(quiz, student);
+
+        // Return the most recent result based on creation time
+        return results.stream()
+                .max(Comparator.comparing(Result::getCreatedAt));
     }
 }

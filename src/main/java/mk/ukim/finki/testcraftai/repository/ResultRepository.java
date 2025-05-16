@@ -7,7 +7,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface ResultRepository extends JpaRepository<Result, Long> {
     List<Result> findByStudent(User student);
@@ -16,11 +15,11 @@ public interface ResultRepository extends JpaRepository<Result, Long> {
     List<Result> findByStudent(User student, Pageable pageable);
 
     /**
-     * Finds a result by quiz and student.
+     * Finds all results by quiz and student.
      *
      * @param quiz the quiz
      * @param student the student
-     * @return optional containing the result if found
+     * @return list of results
      */
-    Optional<Result> findByQuizAndStudent(Quiz quiz, User student);
+    List<Result> findByQuizAndStudent(Quiz quiz, User student);
 }
