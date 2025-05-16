@@ -4,6 +4,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz Details - TestCraft AI</title>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const toggle = document.getElementById("showAnswers");
+            const correctAnswers = document.querySelectorAll(".answer-correct");
+
+            function updateVisibility() {
+                correctAnswers.forEach(answer => {
+                    const label = answer.closest("label");
+                    const tick = label.querySelector(".answer-indicator");
+
+                    if (toggle.checked) {
+                        // Restore green color and tick
+                        label.classList.add("text-success", "fw-bold");
+                        if (tick) tick.style.display = "inline";
+                    } else {
+                        // Remove green color and tick
+                        label.classList.remove("text-success", "fw-bold");
+                        if (tick) tick.style.display = "none";
+                    }
+                });
+            }
+
+            // Initialize visibility on page load
+            updateVisibility();
+
+            // Add event listener to toggle
+            toggle.addEventListener("change", updateVisibility);
+        });
+    </script>
 </head>
 <body>
 <div th:replace="~{fragments/dashboard-layout :: html(sidebarContent=~{::sidebarContent}, mainContent=~{::mainContent})}">
