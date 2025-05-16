@@ -93,6 +93,17 @@ docker-compose up -d
    Open your browser and navigate to `http://localhost:8080`
 
 
+### Setting Up Google Service Account Credentials
+
+1. Copy the `credentials.json.example` file:
+   ```bash
+   cp credentials.json.example credentials.json
+   ```
+
+2. Replace the placeholders in `credentials.json` with your actual Google service account credentials.
+
+3. Ensure that the `credentials.json` file is not committed to the repository by keeping it in `.gitignore`.
+
 ### Local Development Setup
 
 1. **Clone the repository**
