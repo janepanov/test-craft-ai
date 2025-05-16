@@ -23,7 +23,6 @@ import java.util.Arrays;
 import java.util.List;
 
 @Controller
-@RequestMapping("/teacher/quizzes")
 @RequiredArgsConstructor
 public class QuizController {
 
@@ -31,7 +30,7 @@ public class QuizController {
     private final MaterialService materialService;
     private final SubjectService subjectService;
 
-    @GetMapping
+    @GetMapping("/teacher/quizzes")
     public String getQuizzesPage(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
@@ -47,7 +46,7 @@ public class QuizController {
         return "teacher/quizzes";
     }
 
-    @GetMapping("/create")
+    @GetMapping("/teacher/quizzes/create")
     public String getCreateQuizPage(Model model) {
         List<Material> materials = materialService.getAllMaterials();
         List<Subject> subjects = subjectService.getAllSubjects();
@@ -59,7 +58,7 @@ public class QuizController {
         return "teacher/create-quiz";
     }
 
-    @PostMapping("/create")
+    @PostMapping("/teacher/quizzes/create")
     public String createQuiz(
             @RequestParam("materialId") Long materialId,
             @RequestParam("subjectId") Long subjectId,
@@ -89,7 +88,7 @@ public class QuizController {
         }
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/teacher/quizzes/{id}")
     public String getQuizDetails(@PathVariable Long id, Model model) {
         Quiz quiz = quizService.getQuizById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Quiz not found with ID: " + id));

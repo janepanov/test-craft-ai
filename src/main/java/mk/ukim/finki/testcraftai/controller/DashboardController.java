@@ -29,12 +29,4 @@ public class DashboardController {
         model.addAttribute("user", user);
         return "teacher/dashboard";
     }
-
-    @GetMapping("/student/dashboard")
-    public String studentDashboard(Authentication authentication, Model model) {
-        User user = userService.findByUsername(authentication.getName())
-                .orElseThrow(() -> new IllegalStateException("User not found"));
-        model.addAttribute("user", user);
-        return "student/dashboard";
-    }
 }
