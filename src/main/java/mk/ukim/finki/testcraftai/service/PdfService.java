@@ -52,6 +52,7 @@ public class PdfService {
             content.endText();
 
             y -= 25;
+
             if (quiz.getDescription() != null) {
                 content.setFont(PDType1Font.HELVETICA, 12);
                 y = writeWrappedText(
@@ -60,8 +61,9 @@ public class PdfService {
                         margin,
                         y,
                         maxWidth,
-                        lineHeight);
-
+                        lineHeight,
+                        PDType1Font.HELVETICA,
+                        12);
             }
 
             int questionNumber = 1;
@@ -81,9 +83,10 @@ public class PdfService {
                         margin,
                         y - 10,
                         maxWidth,
-                        lineHeight);
+                        lineHeight,
+                        PDType1Font.HELVETICA_BOLD,
+                        12);
 
-                content.setFont(PDType1Font.HELVETICA, 11);
                 char optionLabel = 'A';
                 for (Option option : question.getOptions()) {
                     if (y < 80) {
@@ -100,7 +103,9 @@ public class PdfService {
                             margin + 20,
                             y - 5,
                             maxWidth - 20,
-                            lineHeight);
+                            lineHeight,
+                            PDType1Font.HELVETICA,
+                            11);
                     optionLabel++;
                 }
 
@@ -125,8 +130,9 @@ public class PdfService {
         return out.toByteArray();
     }
 
-    private float writeWrappedText(PDPageContentStream contentStream, String text, float x, float y, float maxWidth, float lineHeight) throws IOException {
-        List<String> lines = wrapText(text, maxWidth);
+    private float writeWrappedText(PDPageContentStream contentStream, String text, float x, float y, float maxWidth, float lineHeight, PDType1Font font, int fontSize) throws IOException {
+        contentStream.setFont(font, fontSize);
+        List<String> lines = wrapText(text, maxWidth, font, fontSize);
         for (String line : lines) {
             if (y < 50) {
                 contentStream.close();
@@ -141,14 +147,14 @@ public class PdfService {
         return y;
     }
 
-    private List<String> wrapText(String text, float maxWidth) throws IOException {
+    private List<String> wrapText(String text, float maxWidth, PDType1Font font, int fontSize) throws IOException {
         List<String> lines = new ArrayList<>();
         String[] words = text.split(" ");
         StringBuilder currentLine = new StringBuilder();
 
         for (String word : words) {
             String testLine = currentLine.isEmpty() ? word : currentLine + " " + word;
-            float textWidth = PDType1Font.HELVETICA.getStringWidth(testLine) / 1000 * 12; // Font size 12
+            float textWidth = font.getStringWidth(testLine) / 1000 * fontSize;
             if (textWidth > maxWidth) {
                 lines.add(currentLine.toString());
                 currentLine = new StringBuilder(word);
