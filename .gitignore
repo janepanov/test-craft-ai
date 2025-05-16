@@ -34,3 +34,7 @@ build/
 
 ### Env ###
 .env
+
+### Google Forms ###
+src/main/resources/credentials.json
+credentials.json
