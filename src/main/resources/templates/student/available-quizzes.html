@@ -6,13 +6,40 @@
     <title>Available Quizzes</title>
 </head>
 <body>
-<div>
-    <h1>Available Quizzes</h1>
-    <ul>
-        <li th:each="quiz : ${quizzes}">
-            <a th:href="@{/student/quizzes/{id}(id=${quiz.id})}" th:text="${quiz.title}">Quiz Title</a>
-        </li>
-    </ul>
+<div th:replace="~{fragments/dashboard-layout :: html(sidebarContent=~{::sidebarContent}, mainContent=~{::mainContent})}">
+    <div th:fragment="sidebarContent">
+        <h5 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+            <span>Student Menu</span>
+        </h5>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link" href="/student/dashboard">
+                    <i class="bi bi-speedometer2"></i> Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="/student/quizzes">
+                    <i class="bi bi-question-circle"></i> Available Quizzes
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/student/results">
+                    <i class="bi bi-graph-up"></i> My Results
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div th:fragment="mainContent">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <h1 class="h2">Available Quizzes</h1>
+        </div>
+
+        <ul class="list-group">
+            <li th:each="quiz : ${quizzes}" class="list-group-item">
+                <a th:href="@{/student/quizzes/{id}(id=${quiz.id})}" th:text="${quiz.title}" class="text-decoration-none">Quiz Title</a>
+            </li>
+        </ul>
+    </div>
 </div>
 </body>
 </html>

@@ -6,20 +6,45 @@
     <title>Take Quiz</title>
 </head>
 <body>
-<div>
-    <h1 th:text="${quiz.title}">Quiz Title</h1>
-    <form th:action="@{/student/quizzes/{id}/submit(id=${quiz.id})}" method="post">
-        <div th:each="question : ${quiz.questions}">
-            <h3 th:text="${question.questionText}">Question Text</h3>
-            <div th:each="option : ${question.options}">
-                <label>
-                    <input type="checkbox" th:name="answers" th:value="${option.id}"/>
-                    <span th:text="${option.optionText}">Option Text</span>
-                </label>
-            </div>
+<div th:replace="~{fragments/dashboard-layout :: html(sidebarContent=~{::sidebarContent}, mainContent=~{::mainContent})}">
+    <div th:fragment="sidebarContent">
+        <h5 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+            <span>Student Menu</span>
+        </h5>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link" href="/student/dashboard">
+                    <i class="bi bi-speedometer2"></i> Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/student/quizzes">
+                    <i class="bi bi-question-circle"></i> Available Quizzes
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/student/results">
+                    <i class="bi bi-graph-up"></i> My Results
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div th:fragment="mainContent">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <h1 class="h2" th:text="${quiz.title}">Quiz Title</h1>
         </div>
-        <button type="submit">Submit</button>
-    </form>
+
+        <form th:action="@{/student/quizzes/{id}/submit(id=${quiz.id})}" method="post">
+            <div th:each="question : ${quiz.questions}" class="mb-4">
+                <h5 th:text="${question.questionText}">Question Text</h5>
+                <div th:each="option : ${question.options}" class="form-check">
+                    <input class="form-check-input" type="checkbox" th:name="answers" th:value="${option.id}" th:id="'option-' + ${option.id}">
+                    <label class="form-check-label" th:for="'option-' + ${option.id}" th:text="${option.optionText}">Option Text</label>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
 </div>
 </body>
 </html>

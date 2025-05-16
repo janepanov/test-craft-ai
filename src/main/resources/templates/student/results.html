@@ -1,45 +1,56 @@
-<div th:fragment="sidebarContent">
-    <h5 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-        <span>Student Menu</span>
-    </h5>
-    <ul class="nav flex-column">
-        <li class="nav-item">
-            <a class="nav-link" href="/student/dashboard">
-                <i class="bi bi-speedometer2"></i> Dashboard
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="/student/quizzes">
-                <i class="bi bi-question-circle"></i> Available Quizzes
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link active" href="/student/results">
-                <i class="bi bi-graph-up"></i> My Results
-            </a>
-        </li>
-    </ul>
-</div>
-
-<div th:fragment="mainContent">
-    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">My Results</h1>
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Results</title>
+</head>
+<body>
+<div th:replace="~{fragments/dashboard-layout :: html(sidebarContent=~{::sidebarContent}, mainContent=~{::mainContent})}">
+    <div th:fragment="sidebarContent">
+        <h5 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+            <span>Student Menu</span>
+        </h5>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link" href="/student/dashboard">
+                    <i class="bi bi-speedometer2"></i> Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/student/quizzes">
+                    <i class="bi bi-question-circle"></i> Available Quizzes
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="/student/results">
+                    <i class="bi bi-graph-up"></i> My Results
+                </a>
+            </li>
+        </ul>
     </div>
+    <div th:fragment="mainContent">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <h1 class="h2">My Results</h1>
+        </div>
 
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th>Quiz</th>
-            <th>Score</th>
-            <th>Date Completed</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="result : ${results}">
-            <td th:text="${result.quiz.title}">Quiz Title</td>
-            <td th:text="${result.score}">0</td>
-            <td th:text="${#temporals.format(result.completedAt, 'dd MMM yyyy')}">01 Jan 2025</td>
-        </tr>
-        </tbody>
-    </table>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Quiz</th>
+                <th>Score</th>
+                <th>Date Completed</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="result : ${results}">
+                <td th:text="${result.quiz.title}">Quiz Title</td>
+                <td th:text="${result.score}">0</td>
+                <td th:text="${#temporals.format(result.completedAt, 'dd MMM yyyy')}">01 Jan 2025</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
+</body>
+</html>
