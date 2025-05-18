@@ -33,11 +33,6 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/teacher/flashcards">
-                    <i class="bi bi-card-text"></i> Flashcards
-                </a>
-            </li>
-            <li class="nav-item">
                 <a class="nav-link" href="/teacher/subjects">
                     <i class="bi bi-book"></i> Subjects
                 </a>
@@ -60,7 +55,7 @@
         </div>
 
         <div class="row mb-4">
-            <div class="col-md-4 mb-4">
+            <div class="col-md-6 mb-4">
                 <div class="card dashboard-card border-primary">
                     <div class="card-body text-center">
                         <i class="bi bi-file-earmark-text text-primary" style="font-size: 2rem;"></i>
@@ -70,23 +65,13 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-4 mb-4">
+            <div class="col-md-6 mb-4">
                 <div class="card dashboard-card border-success">
                     <div class="card-body text-center">
                         <i class="bi bi-question-circle text-success" style="font-size: 2rem;"></i>
                         <h5 class="card-title mt-3">Quizzes</h5>
                         <p class="card-text" th:text="${user.quizzes != null ? user.quizzes.size() : 0}">0</p>
                         <a href="/teacher/quizzes" class="btn btn-sm btn-success">View All</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 mb-4">
-                <div class="card dashboard-card border-info">
-                    <div class="card-body text-center">
-                        <i class="bi bi-card-text text-info" style="font-size: 2rem;"></i>
-                        <h5 class="card-title mt-3">Flashcards</h5>
-                        <p class="card-text">0</p>
-                        <a href="/teacher/flashcards" class="btn btn-sm btn-info">View All</a>
                     </div>
                 </div>
             </div>
