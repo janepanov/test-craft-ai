@@ -27,16 +27,6 @@ public class MaterialService {
     private final UserRepository userRepository;
     private final SubjectRepository subjectRepository;
 
-    /**
-     * Uploads and processes a new material
-     *
-     * @param file the uploaded file
-     * @param title the title of the material
-     * @param subjectId the subject ID
-     * @param username the username of the uploader
-     * @return the saved material
-     * @throws IOException if file processing fails
-     */
     @Transactional
     public Material uploadMaterial(MultipartFile file, String title, Long subjectId, String username) throws IOException {
         User user = userRepository.findByUsername(username)
@@ -45,13 +35,10 @@ public class MaterialService {
         Subject subject = subjectRepository.findById(subjectId)
                 .orElseThrow(() -> new IllegalArgumentException("Subject not found with ID: " + subjectId));
 
-        // Extract text content from the file
         String content = FileProcessingUtil.extractTextFromFile(file);
 
-        // Determine file type
         Material.FileType fileType = FileProcessingUtil.determineFileType(file.getOriginalFilename());
 
-        // Create and save the material
         Material material = new Material();
         material.setTitle(title);
         material.setContent(content);
@@ -62,23 +49,10 @@ public class MaterialService {
         return materialRepository.save(material);
     }
 
-    /**
-     * Retrieves a material by ID
-     *
-     * @param id the material ID
-     * @return optional containing the material if found
-     */
     public Optional<Material> getMaterialById(Long id) {
         return materialRepository.findById(id);
     }
 
-    /**
-     * Retrieves all materials for a user
-     *
-     * @param username the username
-     * @param pageable pagination information
-     * @return page of materials
-     */
     public Page<Material> getMaterialsByUser(String username, Pageable pageable) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
@@ -86,13 +60,6 @@ public class MaterialService {
         return materialRepository.findByUser(user, pageable);
     }
 
-    /**
-     * Retrieves all materials for a subject
-     *
-     * @param subjectId the subject ID
-     * @param pageable pagination information
-     * @return page of materials
-     */
     public Page<Material> getMaterialsBySubject(Long subjectId, Pageable pageable) {
         Subject subject = subjectRepository.findById(subjectId)
                 .orElseThrow(() -> new IllegalArgumentException("Subject not found with ID: " + subjectId));
@@ -100,11 +67,6 @@ public class MaterialService {
         return materialRepository.findBySubject(subject, pageable);
     }
 
-    /**
-     * Retrieves all materials
-     *
-     * @return list of all materials
-     */
     public List<Material> getAllMaterials() {
         return materialRepository.findAll();
     }

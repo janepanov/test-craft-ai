@@ -28,7 +28,6 @@ public class GoogleFormsController {
         Quiz quiz = quizRepository.findById(quizId)
                 .orElseThrow(() -> new IllegalArgumentException("Quiz not found with ID: " + quizId));
 
-        // Create a map of questions and their options with correct answer metadata
         Map<String, List<QuestionOption>> questionsWithOptions = quiz.getQuestions().stream()
                 .collect(Collectors.toMap(
                         Question::getQuestionText,
@@ -37,14 +36,11 @@ public class GoogleFormsController {
                                 .toList()
                 ));
 
-        // Call the service to create the Google Form
         String formUrl = googleFormsService.createFormFromQuiz(quiz.getTitle(), questionsWithOptions);
 
-        // Save the form URL to the quiz and update the database
         quiz.setGoogleFormsUrl(formUrl);
         quizRepository.save(quiz);
 
-        // Add the form URL to the model for the view
         model.addAttribute("link", formUrl);
         return "export-success";
     }

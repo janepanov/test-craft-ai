@@ -27,34 +27,22 @@ public final class FileProcessingUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(FileProcessingUtil.class);
 
-    // Content type constants
     private static final String CONTENT_TYPE_PDF = "application/pdf";
     private static final String CONTENT_TYPE_DOCX = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
 
-    // File extension constants
     private static final String EXTENSION_PDF = ".pdf";
     private static final String EXTENSION_DOCX = ".docx";
     private static final String EXTENSION_TXT = ".txt";
 
-    // PDF generation constants
     private static final float MARGIN = 50;
     private static final float FONT_SIZE = 12;
     private static final float LEADING = 14.5f;
     private static final PDType1Font FONT = PDType1Font.HELVETICA;
 
-    // Private constructor to prevent instantiation
     private FileProcessingUtil() {
         throw new AssertionError("Utility class should not be instantiated");
     }
 
-    /**
-     * Extracts text content from various file types (PDF, DOCX, TXT)
-     *
-     * @param file the uploaded file
-     * @return extracted text content
-     * @throws IOException if file processing fails
-     * @throws IllegalArgumentException if file is null or empty
-     */
     public static String extractTextFromFile(MultipartFile file) throws IOException {
         if (file == null || file.isEmpty()) {
             throw new IllegalArgumentException("File cannot be null or empty");
@@ -77,13 +65,6 @@ public final class FileProcessingUtil {
         };
     }
 
-    /**
-     * Extracts text from a PDF file
-     *
-     * @param file the PDF file
-     * @return extracted text
-     * @throws IOException if PDF processing fails
-     */
     private static String extractTextFromPdf(MultipartFile file) throws IOException {
         try (PDDocument document = PDDocument.load(file.getInputStream())) {
             PDFTextStripper stripper = new PDFTextStripper();
@@ -91,13 +72,6 @@ public final class FileProcessingUtil {
         }
     }
 
-    /**
-     * Extracts text from a DOCX file
-     *
-     * @param file the DOCX file
-     * @return extracted text
-     * @throws IOException if DOCX processing fails
-     */
     private static String extractTextFromDocx(MultipartFile file) throws IOException {
         try (XWPFDocument document = new XWPFDocument(file.getInputStream())) {
             XWPFWordExtractor extractor = new XWPFWordExtractor(document);
@@ -105,12 +79,6 @@ public final class FileProcessingUtil {
         }
     }
 
-    /**
-     * Determines the file type from the file name
-     *
-     * @param fileName the name of the file
-     * @return the corresponding Material.FileType
-     */
     public static Material.FileType determineFileType(String fileName) {
         if (fileName == null) {
             return Material.FileType.TXT;
@@ -130,13 +98,6 @@ public final class FileProcessingUtil {
         }
     }
 
-    /**
-     * Generates a PDF file from text content
-     *
-     * @param content the text content to convert to PDF
-     * @return byte array of the PDF file
-     * @throws IOException if PDF generation fails
-     */
     public static byte[] generatePdfFromText(String content) throws IOException {
         Objects.requireNonNull(content, "Content cannot be null");
 
@@ -181,13 +142,6 @@ public final class FileProcessingUtil {
         }
     }
 
-    /**
-     * Generates a DOCX file from text content
-     *
-     * @param content the text content to convert to DOCX
-     * @return byte array of the DOCX file
-     * @throws IOException if DOCX generation fails
-     */
     public static byte[] generateDocxFromText(String content) throws IOException {
         Objects.requireNonNull(content, "Content cannot be null");
 
@@ -213,13 +167,6 @@ public final class FileProcessingUtil {
         }
     }
 
-    /**
-     * Generates a TXT file from text content
-     *
-     * @param content the text content to convert to TXT
-     * @return byte array of the TXT file
-     * @throws IllegalArgumentException if content is null
-     */
     public static byte[] generateTxtFromText(String content) {
         if (content == null) {
             throw new IllegalArgumentException("Content cannot be null");

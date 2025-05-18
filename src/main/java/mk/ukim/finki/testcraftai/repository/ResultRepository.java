@@ -10,16 +10,6 @@ import java.util.List;
 
 public interface ResultRepository extends JpaRepository<Result, Long> {
     List<Result> findByStudent(User student);
-
-    // Add support for pagination to fetch recent results
     List<Result> findByStudent(User student, Pageable pageable);
-
-    /**
-     * Finds all results by quiz and student.
-     *
-     * @param quiz the quiz
-     * @param student the student
-     * @return list of results
-     */
     List<Result> findByQuizAndStudent(Quiz quiz, User student);
 }

@@ -29,7 +29,6 @@ public class PdfService {
         Quiz quiz = quizRepository.findById(quizId).orElseThrow(() ->
                 new IllegalArgumentException("Quiz not found with ID: " + quizId));
 
-        // Ensure questions and options are loaded
         quiz.getQuestions().forEach(q -> q.getOptions().size());
 
         try (PDDocument document = new PDDocument();
@@ -38,7 +37,6 @@ public class PdfService {
             PDPage page = new PDPage(PDRectangle.A4);
             document.addPage(page);
 
-            // Load a built-in font that supports Unicode
             InputStream fontStream = PdfService.class.getResourceAsStream("/fonts/NotoSans-Regular.ttf");
             if (fontStream == null) {
                 throw new RuntimeException("Font file not found in resources");

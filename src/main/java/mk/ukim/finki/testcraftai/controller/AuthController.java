@@ -47,7 +47,6 @@ public class AuthController {
                                @RequestParam User.Role role,
                                RedirectAttributes redirectAttributes) {
 
-        // Validate password match
         if (!password.equals(confirmPassword)) {
             redirectAttributes.addFlashAttribute("error", "Passwords do not match");
             redirectAttributes.addFlashAttribute("username", username);

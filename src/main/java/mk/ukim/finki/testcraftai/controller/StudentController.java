@@ -78,15 +78,12 @@ public class StudentController {
     public String getQuizResult(@PathVariable Long id, Authentication authentication, Model model) {
         String username = authentication.getName();
 
-        // Retrieve the quiz
         Quiz quiz = quizService.getQuizById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Quiz not found with ID: " + id));
 
-        // Retrieve the result for the quiz and the authenticated user
         Result result = resultService.getResultByQuizAndStudent(quiz, username)
                 .orElseThrow(() -> new IllegalArgumentException("Result not found for quiz ID: " + id));
 
-        // Add quiz and score to the model
         model.addAttribute("quiz", quiz);
         model.addAttribute("score", result.getScore());
 

@@ -34,15 +34,6 @@ public class QuizService {
     private final OpenAIService openAIService;
     private final ResultRepository resultRepository;
 
-    /**
-     * Generates a quiz from material content
-     *
-     * @param materialContent the educational content
-     * @param request quiz generation parameters
-     * @param username the username of the creator
-     * @return the created quiz
-     * @throws JsonProcessingException if JSON processing fails
-     */
     @Transactional
     public Quiz generateQuiz(String materialContent, QuizGenerationRequest request, String username)
             throws JsonProcessingException {
@@ -52,15 +43,12 @@ public class QuizService {
         Subject subject = subjectRepository.findById(request.getSubjectId())
                 .orElseThrow(() -> new IllegalArgumentException("Subject not found with ID: " + request.getSubjectId()));
 
-        // Generate quiz questions using OpenAI
         QuizGenerationResponse response = openAIService.generateQuiz(materialContent, request);
 
-        // Filter questions based on selected question types
         List<QuizGenerationResponse.QuestionDto> filteredQuestions = response.getQuestions().stream()
                 .filter(question -> request.getQuestionTypes().contains(question.getType()))
                 .toList();
 
-        // Create the quiz
         Quiz quiz = new Quiz();
         quiz.setTitle(response.getTitle());
         quiz.setDescription("Generated from material content");
@@ -70,7 +58,6 @@ public class QuizService {
 
         Quiz savedQuiz = quizRepository.save(quiz);
 
-        // Create questions and options
         for (QuizGenerationResponse.QuestionDto questionDto : filteredQuestions) {
             Question question = new Question();
             question.setQuestionText(questionDto.getQuestionText());
@@ -96,23 +83,10 @@ public class QuizService {
         return savedQuiz;
     }
 
-    /**
-     * Retrieves a quiz by ID
-     *
-     * @param id the quiz ID
-     * @return optional containing the quiz if found
-     */
     public Optional<Quiz> getQuizById(Long id) {
         return quizRepository.findById(id);
     }
 
-    /**
-     * Retrieves all quizzes for a user
-     *
-     * @param username the username
-     * @param pageable pagination information
-     * @return page of quizzes
-     */
     public Page<Quiz> getQuizzesByUser(String username, Pageable pageable) {
         User user = userService.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
@@ -120,13 +94,6 @@ public class QuizService {
         return quizRepository.findByUser(user, pageable);
     }
 
-    /**
-     * Retrieves all quizzes for a subject
-     *
-     * @param subjectId the subject ID
-     * @param pageable pagination information
-     * @return page of quizzes
-     */
     public Page<Quiz> getQuizzesBySubject(Long subjectId, Pageable pageable) {
         Subject subject = subjectRepository.findById(subjectId)
                 .orElseThrow(() -> new IllegalArgumentException("Subject not found with ID: " + subjectId));
@@ -134,43 +101,22 @@ public class QuizService {
         return quizRepository.findBySubject(subject, pageable);
     }
 
-    /**
-     * Retrieves all quizzes
-     *
-     * @return list of all quizzes
-     */
     public List<Quiz> getAllQuizzes() {
         return quizRepository.findAll();
     }
 
-    /**
-     * Retrieves all quizzes available for students.
-     *
-     * @return list of quizzes
-     */
     public List<Quiz> getAllAvailableQuizzes() {
-        return quizRepository.findAll(); // Adjust query if needed to filter quizzes
+        return quizRepository.findAll();
     }
 
-    /**
-     * Handles quiz submission and calculates the score.
-     *
-     * @param quizId the ID of the quiz
-     * @param answers the student's answers
-     * @param username the username of the student
-     * @return the score result
-     */
     @Transactional
     public int calculateQuizScore(Long quizId, List<Long> answers, String username) {
-        // Retrieve the quiz by ID
         Quiz quiz = quizRepository.findById(quizId)
                 .orElseThrow(() -> new IllegalArgumentException("Quiz not found with ID: " + quizId));
 
-        // Retrieve the student by username
         User student = userService.findByUsername(username)
                 .orElseThrow(() -> new IllegalArgumentException("User not found: " + username));
 
-        // Calculate the score
         int correctAnswers = 0;
         for (Question question : quiz.getQuestions()) {
             for (Option option : question.getOptions()) {
@@ -180,7 +126,6 @@ public class QuizService {
             }
         }
 
-        // Save the result
         Result result = new Result();
         result.setQuiz(quiz);
         result.setStudent(student);
@@ -190,13 +135,7 @@ public class QuizService {
         return correctAnswers;
     }
 
-    /**
-     * Retrieves recent quizzes.
-     *
-     * @return list of recent quizzes
-     */
     public List<Quiz> getRecentQuizzes() {
-        // Fetch the 5 most recent quizzes sorted by creation date in descending order
         return quizRepository.findAll(PageRequest.of(0, 5, Sort.by(Sort.Direction.DESC, "createdAt"))).getContent();
     }
 }

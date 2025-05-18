@@ -37,7 +37,6 @@ public class GoogleFormsService {
                 .defaultHeader("Content-Type", "application/json")
                 .build();
 
-        // Create the form
         Map<String, Object> requestBody = Map.of("info", Map.of("title", title));
         Map<String, Object> form = webClient.post()
                 .uri("/forms")
@@ -49,10 +48,7 @@ public class GoogleFormsService {
         assert form != null;
         String formId = (String) form.get("formId");
 
-        // Add questions to the form
         addQuestionsToForm(formId, questionsWithOptions, accessToken);
-
-        // Share the form with your personal Google account
         shareFormWithUser(formId, "panovjane@gmail.com", accessToken);
 
         return "https://docs.google.com/forms/d/" + formId + "/edit";
@@ -74,7 +70,6 @@ public class GoogleFormsService {
 
             boolean isMultipleChoice = options.size() > 2;
 
-            // Correctly declare the options as List<Map<String, Object>>
             List<Map<String, Object>> formattedOptions = options.stream()
                     .map(option -> Map.of("value", (Object) option.getText()))
                     .toList();
@@ -102,9 +97,6 @@ public class GoogleFormsService {
         }
 
         Map<String, Object> payload = Map.of("requests", requests);
-
-        // Log the payload for debugging
-        System.out.println("Payload: " + payload);
 
         webClient.post()
                 .bodyValue(payload)

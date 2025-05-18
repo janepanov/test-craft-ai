@@ -23,14 +23,6 @@ public class OpenAIService {
         this.objectMapper = objectMapper;
     }
 
-    /**
-     * Generates a quiz based on the provided text content
-     *
-     * @param content the educational content to generate questions from
-     * @param request parameters for quiz generation
-     * @return response containing generated quiz questions
-     * @throws JsonProcessingException if JSON processing fails
-     */
     public QuizGenerationResponse generateQuiz(String content, QuizGenerationRequest request)
             throws JsonProcessingException {
         String promptText = buildQuizGenerationPrompt(content, request);
@@ -42,13 +34,6 @@ public class OpenAIService {
         return objectMapper.readValue(responseContent, QuizGenerationResponse.class);
     }
 
-    /**
-     * Builds the prompt for quiz generation
-     *
-     * @param content the educational content
-     * @param request parameters for quiz generation
-     * @return formatted prompt text
-     */
     private String buildQuizGenerationPrompt(String content, QuizGenerationRequest request) {
         String questionTypes = request.getQuestionTypes().stream()
                 .map(Enum::name)
